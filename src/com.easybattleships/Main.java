@@ -1,5 +1,8 @@
 package com.easybattleships;
 
 public class Main {
-    // todo
+    public static void main(String[] args) {
+        Game game = new Game();
+        game.start();
+    }
 }

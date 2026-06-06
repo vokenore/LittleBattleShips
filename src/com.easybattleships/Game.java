@@ -1,5 +1,8 @@
 package com.easybattleships;
 
 public class Game {
-    // todo
+    public void start() {
+        System.out.println("Добро пожаловать в игру!");
+    }
 }
+
