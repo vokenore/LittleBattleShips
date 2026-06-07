@@ -1,15 +1,18 @@
 package com.easybattleships;
 
+import java.util.Scanner;
+
 public class Game {
+    private Scanner scanner = new Scanner(System.in);
+
     public void start() {
-        Board board = new Board();
+        System.out.print("Ваше имя: ");
+        String name = scanner.nextLine().trim();
 
-        Ship ship1 = new Ship(0, 0, 3, Ship.Direction.HORIZONTAL);
-        Ship ship2 = new Ship(0, 2, 2, Ship.Direction.VERTICAL); // нарушает зону
+        Player player = new Player(name);
+        ShipPlacer.placeShips(player, scanner);
 
-        System.out.println("Корабль 1: " + board.placeShip(ship1)); // должно отдать true
-        System.out.println("Корабль 2: " + board.placeShip(ship2)); // размещение харам
-        board.printBothGrids();
+        System.out.println("\nИгра скоро начнётся!");
+        System.out.println("Или нет...");
     }
 }
-
