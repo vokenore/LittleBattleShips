@@ -2,16 +2,13 @@ package com.easybattleships;
 
 public class Game {
     public void start() {
-        // Тестирование самых простых обработок на поле
-        System.out.println("Добро пожаловать в Морской бой!");
-
         Board board = new Board();
-        board.placeShipCell(0, 0); // A1
-        board.placeShipCell(0, 1); // B1
 
-        board.receiveShot(3, 5);   // промах
-        board.receiveShot(0, 0);   // попадание
+        Ship ship1 = new Ship(0, 0, 3, Ship.Direction.HORIZONTAL);
+        Ship ship2 = new Ship(0, 2, 2, Ship.Direction.VERTICAL); // нарушает зону
 
+        System.out.println("Корабль 1: " + board.placeShip(ship1)); // должно отдать true
+        System.out.println("Корабль 2: " + board.placeShip(ship2)); // размещение харам
         board.printBothGrids();
     }
 }

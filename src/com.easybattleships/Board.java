@@ -116,8 +116,48 @@ public class Board {
             System.out.print((char)('A' + col) + "  ");
         }
         System.out.println();
-
     }
+
+    // Размещаем корабль (вернёт false если такое размещение запрещено)
+    public boolean placeShip(Ship ship) {
+        if (!isValidPlacement(ship)) {
+            return false;
+        }
+        // Отмечаем все клетки корабля на поле
+        for (int[] cell : ship.getCells()) {
+            placeShipCell(cell[0], cell[1]);
+        }
+        return true;
+    }
+
+    // Проверяем может ли корабль выходить за границы поля
+    public boolean isValidPlacement(Ship ship) {
+        for (int[] cell : ship.getCells()) {
+            int row = cell[0];
+            int col = cell[1];
+
+            // Выход за границы поля
+            if (row < 0 || row >= SIZE || col < 0 || col >= SIZE) {
+                return false;
+            }
+
+            // Проверяем все 8 соседних клеток вокруг каждой клетки корабля
+            for (int dr = -1; dr <= 1; dr++) {
+                for (int dc = -1; dc <= 1; dc++) {
+                    int nr = row + dr;
+                    int nc = col + dc;
+
+                    // Выход за поле уже прочитан
+                    if (nr < 0 || nr >= SIZE || nc < 0 || nc >= SIZE) continue;
+
+                    // Какая-то из соседних клеток пересеклась с уже установленным кораблём, так нельзя
+                    if (ownGrid[nr][nc] == 'O') return false;
+                }
+            }
+        }
+        return true;
+    }
+
 
 
 
