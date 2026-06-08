@@ -8,13 +8,18 @@ public class ShipPlacer {
     // Индекс = размер корабля (индекс 0 просто скипаем)
     private static final int[] SHIP_COUNTS = {0, 6, 5, 4, 3, 2, 1};
 
+
+
     public static void placeShips(Player player, Scanner scanner) {
         Board board = player.getBoard();
         System.out.println("\n=== Расстановка кораблей: " + player.getName() + " ===");
         System.out.println("Формат ввода: [колонка][строка] [H/V]");
         System.out.println("(Для корабля длинной 1 не нужно укзаывать направление)");
         System.out.println("Пример: A1 H 3  (корабль 3 клетки горизонтально от A1)");
-        System.out.println("Введите 'auto' для автоматической расстановки\n");
+        System.out.println("Введите 'auto' для автоматической расстановки");
+        System.out.println("Введите 'allauto' для автоматической расстановки всех кораблей\n");
+
+        boolean autoPlacement = false;
 
         // Идём от большого корабля к маленькому
         for (int size = 6; size >= 1; size--) {
@@ -27,6 +32,13 @@ public class ShipPlacer {
 
                 boolean placed = false;
                 while (!placed) {
+
+                    if (autoPlacement){
+                        autoPlace(board, size);
+                        placed = true;
+                        continue;
+                    }
+
                     System.out.print("> ");
                     String input = scanner.nextLine().trim();
 
@@ -36,6 +48,18 @@ public class ShipPlacer {
                         System.out.println("Корабль размещён автоматически.");
                         continue;
                     }
+
+                    // allauto - автоматическое размещение всех кораблей
+                    // пока что с отображением поля при каждом размещении
+                    if (input.equalsIgnoreCase("allauto")) {
+                        autoPlace(board, size);
+                        placed = true;
+                        autoPlacement = true;
+                        System.out.println("Начато автоматическое размещение.");
+                        continue;
+                    }
+
+
 
                     InputParser.ParseResult result;
 
