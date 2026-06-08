@@ -15,7 +15,7 @@ public class Board {
         hiddenGrid = new char[SIZE][SIZE];
         for (int row = 0; row < SIZE; row++){
             for (int col = 0; col < SIZE; col++){
-                ownGrid[row][col] = '.';
+                ownGrid[row][col] = '.' ;
                 hiddenGrid[row][col] = '.';
             }
         }
@@ -76,7 +76,7 @@ public class Board {
         }
     }
 
-    // Пусть пока функции отдельных полей тоже останутся но наверное лучше печатать одной этой
+    // Печать обоих полей сразу
     public void printBothGrids(){
         System.out.println("Ваше поле" + " ".repeat((46)) + "Поле противника");
         printDoubleHeader();

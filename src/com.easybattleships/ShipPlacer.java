@@ -8,8 +8,6 @@ public class ShipPlacer {
     // Индекс = размер корабля (индекс 0 просто скипаем)
     private static final int[] SHIP_COUNTS = {0, 6, 5, 4, 3, 2, 1};
 
-
-
     public static void placeShips(Player player, Scanner scanner) {
         Board board = player.getBoard();
         System.out.println("\n=== Расстановка кораблей: " + player.getName() + " ===");
@@ -29,7 +27,7 @@ public class ShipPlacer {
 
                 // Автоматическая расстановка всех оставшихся кораблей
                 if (autoPlacement){
-                    autoPlace(board, size);
+                    autoPlace(player, size);
                     continue;
                 }
 
@@ -45,7 +43,7 @@ public class ShipPlacer {
                     String input = scanner.nextLine().trim();
 
                     if (input.equalsIgnoreCase("auto")) {
-                        autoPlace(board, size);
+                        autoPlace(player, size);
                         placed = true;
                         System.out.println("Корабль размещён автоматически.");
                         continue;
@@ -53,7 +51,7 @@ public class ShipPlacer {
 
                     // При вводе allauto - автоматическое размещение всех кораблей
                     if (input.equalsIgnoreCase("allauto")) {
-                        autoPlace(board, size);
+                        autoPlace(player, size);
                         placed = true;
                         autoPlacement = true;
                         System.out.println("Начато автоматическое размещение.");
@@ -93,6 +91,7 @@ public class ShipPlacer {
                         continue;
                     }
 
+                    player.addShip(ship);
                     placed = true;
                     System.out.println("Корабль размещён");
                 }
@@ -104,7 +103,8 @@ public class ShipPlacer {
     }
 
     // Автоматическое размещение одного корабля
-    private static void autoPlace(Board board, int size) {
+    public static void autoPlace(Player player, int size) {
+        Board board = player.getBoard();
         java.util.Random random = new java.util.Random();
 
         while (true) {
@@ -117,7 +117,18 @@ public class ShipPlacer {
             Ship ship = new Ship(row, col, size, dir);
 
             if (board.placeShip(ship)) {
-                return; // наконец разместили
+                player.addShip(ship);
+                return;
+            }
+        }
+    }
+
+    // Расстановка всех кораблей бота
+    public static void autoPlaceAll(Player player) {
+        for (int size = 6; size >= 1; size--) {
+            int count = SHIP_COUNTS[size];
+            for (int i = 0; i < count; i++) {
+                autoPlace(player, size);
             }
         }
     }

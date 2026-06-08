@@ -1,4 +1,4 @@
 #!/bin/bash
 mkdir -p out
-javac -d out src/com/battleship/*.java
-java -cp out com.battleship.Main
+javac -d out src/com/easybattleships/*.java
+java -cp out com.easybattleships.Main
