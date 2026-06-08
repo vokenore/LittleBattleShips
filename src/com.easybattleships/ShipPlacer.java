@@ -15,7 +15,7 @@ public class ShipPlacer {
         System.out.println("\n=== Расстановка кораблей: " + player.getName() + " ===");
         System.out.println("Формат ввода: [колонка][строка] [H/V]");
         System.out.println("(Для корабля длинной 1 не нужно укзаывать направление)");
-        System.out.println("Пример: A1 H 3  (корабль 3 клетки горизонтально от A1)");
+        System.out.println("Пример: A1 H (корабль установить горизонтально от A1)");
         System.out.println("Введите 'auto' для автоматической расстановки");
         System.out.println("Введите 'allauto' для автоматической расстановки всех кораблей\n");
 
@@ -26,18 +26,20 @@ public class ShipPlacer {
             int count = SHIP_COUNTS[size];
 
             for (int i = 0; i < count; i++) {
+
+                // Автоматическая расстановка всех оставшихся кораблей
+                if (autoPlacement){
+                    autoPlace(board, size);
+                    continue;
+                }
+
                 board.printOwn();
                 System.out.printf("\nРасставь корабль размером %d (%d из %d):\n",
                         size, i + 1, count);
 
                 boolean placed = false;
+                // Пытаемся разместить текущий корабль
                 while (!placed) {
-
-                    if (autoPlacement){
-                        autoPlace(board, size);
-                        placed = true;
-                        continue;
-                    }
 
                     System.out.print("> ");
                     String input = scanner.nextLine().trim();
@@ -49,8 +51,7 @@ public class ShipPlacer {
                         continue;
                     }
 
-                    // allauto - автоматическое размещение всех кораблей
-                    // пока что с отображением поля при каждом размещении
+                    // При вводе allauto - автоматическое размещение всех кораблей
                     if (input.equalsIgnoreCase("allauto")) {
                         autoPlace(board, size);
                         placed = true;
