@@ -1,4 +1,5 @@
 package com.easybattleships;
+import org.java_websocket.server.WebSocketServer;
 
 public class Main {
     public static void main(String[] args) {
@@ -6,3 +7,12 @@ public class Main {
         game.start();
     }
 }
+
+
+//Передача сообщений по локальной сети
+
+//JOIN:Имя              второй игрок подключился
+//READY:Имя             игрок расставил корабли
+//SHOT:row,col          выстрел
+//RESULT:hit/miss/sunk  результат выстрела
+//DEFEATED:Имя          игрок проиграл

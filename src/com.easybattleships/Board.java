@@ -47,9 +47,17 @@ public class Board {
         return ownGrid[row][col] == 'X' || ownGrid[row][col] == '*';
     }
 
+    public boolean isAlreadyShotHiddenGrid(int row, int col) {
+        return hiddenGrid[row][col] == 'X' || hiddenGrid[row][col] == '*';
+    }
+
     // Хз что здесь можно комментировать
     public char getCell(int row, int col) {
         return ownGrid[row][col];
+    }
+
+    public char getHiddenCell(int row, int col) {
+        return hiddenGrid[row][col];
     }
 
     // Печатаем своё поле

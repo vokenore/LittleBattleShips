@@ -14,8 +14,8 @@ public class Game {
         if (name.isEmpty()) name = "Игрок";
 
         System.out.println("\nВыберите режим:");
-        System.out.println("1. Игра против Чёрной бороды");
-        System.out.println("2. Игра с напарником");
+        System.out.println("1. Игра против Чёрой бороды (бот)");
+        System.out.println("2. Игра по сети (WebSocket)");
         System.out.print("> ");
 
         String mode = scanner.nextLine().trim();
@@ -23,9 +23,10 @@ public class Game {
         if (mode.equals("1")) {
             startSinglePlayer(name);
         } else if (mode.equals("2")) {
-            System.out.println("Режим с напарником в разработке.");
+            WebSocketMultiplayerGame ws = new WebSocketMultiplayerGame(scanner);
+            ws.start(name);
         } else {
-            System.out.println("Неверный выбор, перезапустите игру.");
+            System.out.println("Неверный выбор.");
         }
     }
 
@@ -39,7 +40,7 @@ public class Game {
         // Бот расставляет свои корабли
         clearConsole();
         System.out.println("Бот расставляет корабли...");
-        ShipPlacer.autoPlaceAll(bot);
+        ShipPlacer.autoPlaceAll(bot, human.getName().equals("test"));
 
         gameLoop(human, bot);
     }
@@ -164,5 +165,7 @@ public class Game {
         // В реальном терминале работает
         System.out.print("\033[H\033[2J");
         System.out.flush();
+
+        // ПЕРЕРАБОТАТЬ!!!!!!!!
     }
 }

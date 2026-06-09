@@ -124,11 +124,18 @@ public class ShipPlacer {
     }
 
     // Расстановка всех кораблей бота
-    public static void autoPlaceAll(Player player) {
-        for (int size = 6; size >= 1; size--) {
-            int count = SHIP_COUNTS[size];
-            for (int i = 0; i < count; i++) {
-                autoPlace(player, size);
+    public static void autoPlaceAll(Player player, boolean istest) {
+        if (istest){
+            Board board = player.getBoard();
+            Ship testShip = new Ship(1, 0, 2, Ship.Direction.VERTICAL);
+            board.placeShip(testShip);
+            player.addShip(testShip);
+        } else {
+            for (int size = 6; size >= 1; size--) {
+                int count = SHIP_COUNTS[size];
+                for (int i = 0; i < count; i++) {
+                    autoPlace(player, size);
+                }
             }
         }
     }
