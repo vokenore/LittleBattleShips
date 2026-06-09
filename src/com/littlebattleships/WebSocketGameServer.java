@@ -1,4 +1,4 @@
-package com.easybattleships;
+package com.littlebattleships;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
@@ -44,7 +44,6 @@ public class WebSocketGameServer extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket conn, String message) {
-        System.out.println("[DEBUG] Получено сообщение: " + message);
 
         // Пересылаем наблюдателям все сообщения
         for (WebSocket obs : observers) {

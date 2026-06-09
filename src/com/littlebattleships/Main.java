@@ -1,5 +1,4 @@
-package com.easybattleships;
-import org.java_websocket.server.WebSocketServer;
+package com.littlebattleships;
 
 public class Main {
     public static void main(String[] args) {

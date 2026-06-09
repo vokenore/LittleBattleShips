@@ -1,8 +1,10 @@
-package com.easybattleships;
+package com.littlebattleships;
 
 import java.util.Scanner;
 
 public class Game {
+    public static final String PASSTOTEST = "bothasonlyoneshipplease";
+
     private Scanner scanner = new Scanner(System.in);
 
     public void start() {
@@ -40,7 +42,7 @@ public class Game {
         // Бот расставляет свои корабли
         clearConsole();
         System.out.println("Бот расставляет корабли...");
-        ShipPlacer.autoPlaceAll(bot, human.getName().equals("test"));
+        ShipPlacer.autoPlaceAll(bot, human.getName().equals(PASSTOTEST));
 
         gameLoop(human, bot);
     }

@@ -1,4 +1,4 @@
-package com.easybattleships;
+package com.littlebattleships;
 
 import java.util.Scanner;
 

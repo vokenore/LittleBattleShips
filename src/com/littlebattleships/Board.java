@@ -1,7 +1,14 @@
-package com.easybattleships;
+package com.littlebattleships;
 
 public class Board {
     public static final int SIZE = 16;
+
+    // Так будет всяко лучше, а то ещё непонятно надо ли делать как в ТЗ или как действительно адекватно
+    public static final char HITCELLCHAR = 'X';
+    public static final char MISSCELLCHAR = '*';
+    public static final char SHIPCELLCHAR = 'O';
+    public static final char DEFAULTCELLCHAR = '.';
+
 
     // На своём поле видно корабли
     private char[][] ownGrid;
@@ -15,8 +22,8 @@ public class Board {
         hiddenGrid = new char[SIZE][SIZE];
         for (int row = 0; row < SIZE; row++){
             for (int col = 0; col < SIZE; col++){
-                ownGrid[row][col] = '.' ;
-                hiddenGrid[row][col] = '.';
+                ownGrid[row][col] = DEFAULTCELLCHAR ;
+                hiddenGrid[row][col] = DEFAULTCELLCHAR;
             }
         }
     }
@@ -28,27 +35,27 @@ public class Board {
 
     // Выстрелили по нашему полю, получили true при попадении
     public boolean receiveShot(int row, int col) {
-        if (ownGrid[row][col] == 'O') {
-            ownGrid[row][col] = 'X';
+        if (ownGrid[row][col] == SHIPCELLCHAR) {
+            ownGrid[row][col] = HITCELLCHAR;
             return true;
         } else {
-            ownGrid[row][col] = '*';
+            ownGrid[row][col] = MISSCELLCHAR;
             return false;
         }
     }
 
     // Отмечаем результат выстрела
     public void markHiddenGrid(int row, int col, boolean hit) {
-        hiddenGrid[row][col] = hit ? 'X' : '*';
+        hiddenGrid[row][col] = hit ? HITCELLCHAR : MISSCELLCHAR;
     }
 
     // Проверить была ли клетка уже отмечена выстрелом
     public boolean isAlreadyShot(int row, int col) {
-        return ownGrid[row][col] == 'X' || ownGrid[row][col] == '*';
+        return ownGrid[row][col] == HITCELLCHAR || ownGrid[row][col] == MISSCELLCHAR;
     }
 
     public boolean isAlreadyShotHiddenGrid(int row, int col) {
-        return hiddenGrid[row][col] == 'X' || hiddenGrid[row][col] == '*';
+        return hiddenGrid[row][col] == HITCELLCHAR || hiddenGrid[row][col] == MISSCELLCHAR;
     }
 
     // Хз что здесь можно комментировать
@@ -159,7 +166,7 @@ public class Board {
                     if (nr < 0 || nr >= SIZE || nc < 0 || nc >= SIZE) continue;
 
                     // Какая-то из соседних клеток пересеклась с уже установленным кораблём, так нельзя
-                    if (ownGrid[nr][nc] == 'O') return false;
+                    if (ownGrid[nr][nc] == SHIPCELLCHAR) return false;
                 }
             }
         }

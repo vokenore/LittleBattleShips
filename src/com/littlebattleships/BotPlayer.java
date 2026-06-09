@@ -1,4 +1,4 @@
-package com.easybattleships;
+package com.littlebattleships;
 
 import java.util.ArrayList;
 import java.util.Collections;

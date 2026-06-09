@@ -1,4 +1,4 @@
-package com.easybattleships;
+package com.littlebattleships;
 
 
 public class InputParser {
