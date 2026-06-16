@@ -78,6 +78,8 @@ public class WebSocketMultiplayerGame {
 
         // Подтверждаем
         server.sendToPlayer2("JOIN_OK:" + playerName);
+        notifyObservers("PLAYER1:" + playerName);
+        notifyObservers("PLAYER2:" + opponentName);
 
         playGame(playerName, opponentName, true);
     }
@@ -95,10 +97,16 @@ public class WebSocketMultiplayerGame {
         String portInput = scanner.nextLine().trim();
         int port = portInput.isEmpty() ? DEFAULT_PORT : Integer.parseInt(portInput);
 
+        // Пробуем подключиться, смотрим кого впускаем
+        final boolean[] isObserver = {false};
+
         try {
             client = new WebSocketGameClient(host, port, new WebSocketGameClient.MessageHandler() {
                 @Override
                 public void onMessageReceived(String message) {
+                    if (message.startsWith("OBSERVER:")) {
+                        isObserver[0] = true;
+                    }
                     messageQueue.add(message);
                 }
 
@@ -113,17 +121,25 @@ public class WebSocketMultiplayerGame {
                 }
             });
 
-            client.connectBlocking(); // ждём подключения
+            client.connectBlocking();
 
         } catch (Exception e) {
             System.out.println("Не удалось подключиться: " + e.getMessage());
             return;
         }
 
-        // Отправляем своё имя
-        sendMessage("JOIN:" + playerName);
+        try { Thread.sleep(500); } catch (InterruptedException e) {}
 
-        // Ждём подтверждения и имени сервера
+        if (isObserver[0]) {
+            try { client.closeBlocking(); } catch (Exception e) {}
+            System.out.println("Игра уже идёт - подключаетесь как наблюдатель.");
+            ObserverMode observer = new ObserverMode(scanner);
+            observer.start(host, port);
+            return;
+        }
+
+        // Второй игрок
+        sendMessage("JOIN:" + playerName);
         String joinOk = waitForMessage("JOIN_OK");
         String opponentName = joinOk.split(":")[1];
         System.out.println("Подключились к игре. Соперник: " + opponentName);
@@ -152,6 +168,7 @@ public class WebSocketMultiplayerGame {
 
                 if (result.equals("sunk") && checkIfOpponentDefeated()) {
                     sendMessage("DEFEATED:" + opponentName);
+                    notifyObservers("DEFEATED:" + opponentName);
                     Game.clearConsole();
                     printBoards(myName, opponentName);
                     System.out.println("\nВы победили!");
@@ -169,6 +186,7 @@ public class WebSocketMultiplayerGame {
                     Game.clearConsole();
                     printBoards(myName, opponentName);
                     System.out.println("\nВы проиграли!");
+                    notifyObservers("DEFEATED:" + myName);
                     closeConnection();
                     break;
                 }
@@ -214,6 +232,9 @@ public class WebSocketMultiplayerGame {
             else if (result.equals("hit")) System.out.println("\nРанил!");
             else System.out.println("\nМимо.");
 
+            notifyObservers("SHOT:" + row + "," + col);
+            notifyObservers("RESULT:" + result);
+
             return result;
         }
     }
@@ -234,6 +255,9 @@ public class WebSocketMultiplayerGame {
         char colChar = (char)('A' + col);
         System.out.printf("Противник выстрелил в %c%d - %s%n",
                 colChar, row + 1, translateResult(result));
+
+        notifyObservers("SHOT:" + row + "," + col);
+        notifyObservers("RESULT:" + result);
 
         return result;
     }
@@ -313,6 +337,12 @@ public class WebSocketMultiplayerGame {
             case "hit": return "Ранил";
             case "sunk": return "Убил";
             default: return "Мимо";
+        }
+    }
+
+    private void notifyObservers(String message) {
+        if (isServer && server != null) {
+            server.notifyObservers(message);
         }
     }
 }

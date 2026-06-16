@@ -9,7 +9,7 @@ public class Game {
 
     public void start() {
         clearConsole();
-        System.out.println("=== МОРСКОЙ БОЙ ===\n");
+        System.out.println("-~= МОРСКОЙ БОЙ =~-\n");
 
         System.out.print("Введите ваше имя: ");
         String name = scanner.nextLine().trim();

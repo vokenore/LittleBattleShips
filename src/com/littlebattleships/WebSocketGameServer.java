@@ -9,7 +9,6 @@ import java.util.List;
 
 public class WebSocketGameServer extends WebSocketServer {
 
-    private WebSocket player1Conn;
     private WebSocket player2Conn;
     // Наблюдатели (после подключения 2 игроков)
     private List<WebSocket> observers = new ArrayList<>();
@@ -45,12 +44,16 @@ public class WebSocketGameServer extends WebSocketServer {
     @Override
     public void onMessage(WebSocket conn, String message) {
 
-        // Пересылаем наблюдателям все сообщения
-        for (WebSocket obs : observers) {
-            if (obs.isOpen()) obs.send(message);
-        }
-
+//        // Пересылаем наблюдателям все сообщения
+//        for (WebSocket obs : observers) {
+//            if (obs.isOpen()) obs.send(message);
+//        }
         handler.onMessageReceived(message, false);
+    }
+
+    // Есть ли наблюдатели
+    public boolean hasObservers() {
+        return !observers.isEmpty();
     }
 
     @Override
@@ -60,6 +63,14 @@ public class WebSocketGameServer extends WebSocketServer {
             player2Conn = null;
         }
         observers.remove(conn);
+    }
+
+    public void notifyObservers(String message) {
+        for (WebSocket obs : new ArrayList<>(observers)) {
+            if (obs.isOpen()) {
+                obs.send("OBSERVE:" + message);
+            }
+        }
     }
 
     @Override
