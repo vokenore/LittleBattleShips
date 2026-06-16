@@ -3,7 +3,8 @@ package com.littlebattleships;
 import java.util.Scanner;
 
 public class Game {
-    public static final String PASSTOTEST = "bothasonlyoneshipplease";
+    private static final String PASSTOTEST = "bothasonlyoneshipplease";
+    private static final String PASSTOADMIN = "admin";
 
     private Scanner scanner = new Scanner(System.in);
 
@@ -16,7 +17,13 @@ public class Game {
 
         System.out.print("Введите ваше имя: ");
         String name = scanner.nextLine().trim();
-        if (name.isEmpty()) name = "Игрок";
+
+        if (name.isEmpty()) {
+            name = "Игрок";
+        } else if (name.equalsIgnoreCase(PASSTOADMIN)) {
+            new AdminMode(scanner).start();
+            return;
+        }
 
         System.out.println("\nВыберите режим:");
         System.out.println("1. Игра против Чёрой бороды (бот)");
@@ -173,10 +180,8 @@ public class Game {
 
 
     public static void clearConsole() {
-        // В реальном терминале работает
+        // Работает не идеально конечно, но если в терминале не удаляет а пропускает прошлые данные это же наоборот удобно, можно посмотреть что-нибудь из старого
         System.out.print("\033[H\033[2J");
         System.out.flush();
-
-        // ПЕРЕРАБОТАТЬ!!!!!!!!
     }
 }
