@@ -7,6 +7,9 @@ public class Game {
 
     private Scanner scanner = new Scanner(System.in);
 
+    private GameLogger logger;
+
+
     public void start() {
         clearConsole();
         System.out.println("-~= МОРСКОЙ БОЙ =~-\n");
@@ -43,6 +46,7 @@ public class Game {
         clearConsole();
         System.out.println("Бот расставляет корабли...");
         ShipPlacer.autoPlaceAll(bot, human.getName().equals(PASSTOTEST));
+        logger = new GameLogger(human.getName(), bot.getName());
 
         gameLoop(human, bot);
     }
@@ -64,6 +68,7 @@ public class Game {
                     clearConsole();
                     human.getBoard().printBothGrids();
                     System.out.println("\nВы победили! Все корабли противника потоплены!");
+                    logger.finish(human.getName(), human.getBoard(), bot.getBoard());
                     break;
                 }
 
@@ -80,6 +85,7 @@ public class Game {
                     clearConsole();
                     human.getBoard().printBothGrids();
                     System.out.println("\nВы проиграли...");
+                    logger.finish(bot.getName(), human.getBoard(), bot.getBoard());
                     break;
                 }
 
@@ -127,6 +133,7 @@ public class Game {
                 System.out.println("\nМимо... Готовимся к ответу Чёрной бороды...");
             }
 
+            logger.logMove(human.getName(), row, col, result);
             return result;
         }
     }
@@ -159,6 +166,8 @@ public class Game {
         }
 
         try { Thread.sleep(1000); } catch (InterruptedException e) {}
+
+        logger.logMove(bot.getName(), row, col, result);
         return result;
     }
 

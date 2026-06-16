@@ -11,6 +11,8 @@ public class WebSocketMultiplayerGame {
     private Player localPlayer;
     private Board opponentBoard;
     private boolean isServer;
+    private GameLogger logger;
+    private String opponentName;
 
     // Очередь входящих сообщений
     private BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>();
@@ -150,11 +152,14 @@ public class WebSocketMultiplayerGame {
     // ИГРОВОЙ ПРОЦЕСС
 
     private void playGame(String myName, String opponentName, boolean myTurnFirst) {
+        this.opponentName = opponentName;
+
         // Расстановка кораблей
         ShipPlacer.placeShips(localPlayer, scanner);
         sendMessage("READY:" + myName);
         System.out.println("Ждём пока противник расставит корабли...");
         waitForMessage("READY");
+        logger = new GameLogger(myName, opponentName);
         System.out.println("Оба готовы! Начинаем.\n");
 
         boolean myTurn = myTurnFirst;
@@ -232,6 +237,7 @@ public class WebSocketMultiplayerGame {
             else if (result.equals("hit")) System.out.println("\nРанил!");
             else System.out.println("\nМимо.");
 
+            logger.logMove(myName, row, col, result);
             notifyObservers("SHOT:" + row + "," + col);
             notifyObservers("RESULT:" + result);
 
@@ -248,6 +254,7 @@ public class WebSocketMultiplayerGame {
 
         // Обрабатываем
         String result = localPlayer.receiveShot(row, col);
+        logger.logMove(opponentName, row, col, result);
 
         // Отправляем результат обратно
         sendMessage("RESULT:" + result);
